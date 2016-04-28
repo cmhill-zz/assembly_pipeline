@@ -1,0 +1,19 @@
+import operator
+import os
+
+configfile: "config.json"
+
+SNAKEMAKE_DIR = os.path.dirname(workflow.snakefile)
+
+#Input assembly.
+rule nucmer_to_reference:
+    input: config["assembly"]["fasta"],reference=config["whole_genome_comparisons"]["reference"]
+    output: "whole_genome_comparisons/assembly.delta"
+    params: nucmer=config["whole_genome_comparisons"]["nucmer"],nucmer_options=config["whole_genome_comparisons"]["nucmer_options"]
+    shell: "{params.nucmer} {params.nucmer_options} {input.reference} {input[0]} -p whole_genome_comparisons/assembly"
+
+rule mummerplot:
+    input: "whole_genome_comparisons/assembly.delta"
+    output: "whole_genome_comparisons/assembly_vs_GRCh38.mummerplot.png"
+    params: mummerplot=config["whole_genome_comparisons"]["mummerplot"]
+    shell: "{params.mummerplot} -t png --layout --large --filter {input} -p whole_genome_comparisons/assembly_vs_GRCh38.mummerplot"

@@ -1,0 +1,27 @@
+import glob
+import os
+
+configfile: "config.json"
+
+# CHROMOSOMES_DIR = config["repeat_masker"]["chromosomes_dir"]
+# CHROMOSOMES = [os.path.basename(path) for path in glob.glob("%s/*" % CHROMOSOMES_DIR)]
+
+rule collect_repeats:
+    input: dynamic("repeat_masker/mask/{contigs}.masked")
+    #, "repeat_masker/mask/{contigs}.out.gff", "repeat_masker/mask/{contigs}.out"
+    #input: dynamic("repeat_masker/contigs/{contigs}"
+
+rule split_contigs_into_separate_files:
+    input: config["assembly"]["fasta"]
+    output: dynamic("repeat_masker/contigs/{contigs}")
+    params: sge_opts="", regexp="\">.*?(\S+)\""
+    shell: "/net/eichler/vol4/home/jlhudd/fasta_tools/split_fasta_file.py {input} -d repeat_masker/contigs/ {params.regexp}"
+
+rule repeat_mask_sequences:
+    input: "repeat_masker/contigs/{contigs}"
+    output: "repeat_masker/mask/{contigs}.masked", "repeat_masker/mask/{contigs}.out.gff", "repeat_masker/mask/{contigs}.out"
+    params: sge_opts="-l mfree=4G -pe serial 4"
+    run:
+        shell("""RepeatMasker -pa 4 -gff -no_is -xsmall -s -e wublast -species "primates" -dir `dirname {output[0]}` {input}; rm -f `dirname {output[0]}`/{wildcards.contigs}.{{cat,ref,tbl}}""")
+        if not all([os.path.exists(out) for out in output]):
+            shell("rsync {input} {output[0]}; touch {output[1]} {output[2]}")
