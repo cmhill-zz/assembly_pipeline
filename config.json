@@ -1,9 +1,9 @@
 {
     "reads": "/net/eichler/vol24/projects/whole_genome_assembly/nobackups/chimp/reads/reads.fofn",
     "assembly": {
-        "assembler": "canu",
-        "fasta": "/net/eichler/vol25/projects/whole_genome_assembly/nobackups/chimp/Drafts/V2.0a-canu/clint.contigs.fasta",
-        "quivered": "/net/eichler/vol25/projects/whole_genome_assembly/nobackups/chimp/Drafts/V2.0a-canu/clint.contigs.quiver.fasta",
+        "assembler": "falcon",
+        "fasta": "/net/eichler/vol25/projects/whole_genome_assembly/nobackups/chimp/Drafts/V2.0-falcon/p_ctg.fa",
+        "quivered": "/net/eichler/vol26/15000/whole_genome_assembly/nobackups/chimp/assemblies/falcon3/analysis/p_ctg.quivered.fa",
     },
     "whole_genome_comparisons": {
         "reference": "/net/eichler/vol24/projects/whole_genome_assembly/nobackups/gorilla/susie3/scaffolding/sspace/hg38.fa",
@@ -13,7 +13,7 @@
     },
     "quiver": {
       "bax_fofn": "/net/eichler/vol24/projects/whole_genome_assembly/nobackups/chimp/reads/input.bax.fofn",
-      "sawriter": "~/src/smrtsv-cmhill/bin/sawriter",
+      "sawriter": "~chrismh/src/smrtsv-cmhill/bin/sawriter",
       "batches": "15",
       "regions": "15"
     },
